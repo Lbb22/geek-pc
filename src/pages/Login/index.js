@@ -1,9 +1,13 @@
 import React, { Component } from "react";
-import { Card, Button, Checkbox, Form, Input } from "antd";
+import { Card, Button, Checkbox, Form, Input, message } from "antd";
 import "./index.scss";
-import logo from "../../assets/logo.svg";
+import logo from "assets/logo.svg";
+import { login } from "api/user";
 
 export default class Login extends Component {
+  state = {
+    loading: false,
+  };
   render() {
     return (
       <div className="login">
@@ -73,7 +77,12 @@ export default class Login extends Component {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" block>
+              <Button
+                type="primary"
+                htmlType="submit"
+                block
+                loading={this.state.loading}
+              >
                 登录
               </Button>
             </Form.Item>
@@ -83,7 +92,27 @@ export default class Login extends Component {
     );
   }
 
-  onFinish = (value) => {
-    console.log(value);
+  onFinish = async (mobile, code) => {
+    this.setState({
+      loading: true,
+    });
+    try {
+      const res = await login(mobile, code);
+
+      //3.提示消息
+      message.success("登录成功", 1, () => {
+        //登录成功
+        //1.保存token
+        localStorage.setItem("token", res.data.token);
+        //2.跳转到首页
+        this.props.history.push("./home");
+      });
+    } catch (error) {
+      message.warning(error.response.data.message, 1, () => {
+        this.setState({
+          loading: false,
+        });
+      });
+    }
   };
 }
