@@ -1,0 +1,39 @@
+.layout {
+  height: 100vh;
+  :global {
+    .ant-layout {
+      height: 100%;
+    }
+    .ant-layout-header {
+      padding: 0 30px;
+      position: relative;
+    }
+    .logo {
+      float: left;
+      width: 100px;
+      height: 40px;
+      margin: 13px 0px;
+      background: url(../../assets/logo.png) no-repeat 0 0;
+      background-size: 100px 40px;
+    }
+    .profile {
+      color: #fff;
+      font-weight: 400;
+      position: absolute;
+      right: 25px;
+      span + span {
+        margin-left: 20px;
+        cursor: pointer;
+      }
+    }
+
+    .ant-row-rtl .logo {
+      float: right;
+      margin: 16px 0 16px 24px;
+    }
+
+    .site-layout-background {
+      background: #fff;
+    }
+  }
+}

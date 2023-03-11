@@ -3,6 +3,7 @@ import { Card, Button, Checkbox, Form, Input, message } from "antd";
 import "./index.scss";
 import logo from "assets/logo.svg";
 import { login } from "api/user";
+import { setToken } from "utils/storage";
 
 export default class Login extends Component {
   state = {
@@ -92,7 +93,7 @@ export default class Login extends Component {
     );
   }
 
-  onFinish = async (mobile, code) => {
+  onFinish = async ({ mobile, code }) => {
     this.setState({
       loading: true,
     });
@@ -103,9 +104,15 @@ export default class Login extends Component {
       message.success("登录成功", 1, () => {
         //登录成功
         //1.保存token
-        localStorage.setItem("token", res.data.token);
+        setToken(res.data.token);
         //2.跳转到首页
-        this.props.history.push("./home");
+        //判断location.state中是否有值
+        const { state } = this.props.location;
+        if (state) {
+          this.props.history.push(state.from);
+        } else {
+          this.props.history.push("./home");
+        }
       });
     } catch (error) {
       message.warning(error.response.data.message, 1, () => {
